@@ -59,8 +59,8 @@ def answer_question(db, question):
     message = [
         (
             "system",
-            "Answer ONLY using the provided context. "
-            "If the answer is not in the context, say 'I don't know'. "
+            "you are an helpful assistant and a chatbot "
+            "if question is relevant to the context then answer or else if someone wants to chat just chat with them "
             "Keep the answer short and factual.",
         ),
         ("human", "Context:\n{context}\n\nQuestion: {question}"),
