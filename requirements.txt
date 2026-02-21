@@ -1,0 +1,54 @@
+# LangChain Core & Community
+langchain==0.1.10
+langchain-core==0.1.3
+langchain-community==0.0.15
+langchain-openai==0.0.5
+langchain-anthropic==0.1.1
+langchain-groq==0.0.1
+langchain-google-genai==0.0.1
+langchain-together==0.0.1
+langchain-huggingface==0.0.1
+
+# HuggingFace Transformers & PyTorch
+transformers==4.37.2
+torch==2.10.0
+torchvision==0.25.0
+torchaudio==2.10.0
+
+# AI/ML Libraries
+openai==1.6.1
+anthropic==0.7.1
+google-generativeai==0.3.0
+
+# Data & Vector Stores
+pinecone-client==2.2.4
+chromadb==0.4.10
+faiss-cpu==1.13.2
+sentence-transformers==2.3.1
+
+# Data Science
+numpy==1.26.4
+pandas==2.2.0
+scikit-learn==1.4.0
+scipy==1.13.0
+
+# Utilities
+python-dotenv==1.0.0
+requests==2.31.0
+tqdm==4.66.1
+pydantic==2.5.0
+aiohttp==3.9.1
+httpx==0.25.2
+
+# Database & Storage
+sqlalchemy==2.0.23
+psycopg2-binary==2.9.9
+
+# Code Quality
+black==23.12.1
+flake8==6.1.0
+pylint==3.0.3
+isort==5.13.2
+
+# Logging & Monitoring
+python-json-logger==2.0.7
