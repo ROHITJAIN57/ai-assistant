@@ -7,6 +7,9 @@ st.set_page_config(page_title="AI Chat Assistant", layout="wide")
 st.title("🤖 AI Assistant — Chat & PDF Q&A")
 
 # -------- Session State --------
+if "mode" not in st.session_state:
+    st.session_state.mode = "general"  # or "pdf"
+
 if "db" not in st.session_state:
     st.session_state.db = None
 if "documents" not in st.session_state:
@@ -18,32 +21,21 @@ if "general_history" not in st.session_state:
 if "doc_history" not in st.session_state:
     st.session_state.doc_history = []
 
-tab1, tab2 = st.tabs(["💬 General Chat", "📄 PDF Chat"])
+# -------- Mode Selector (Tabs-like header, no radios) --------
+col1, col2 = st.columns(2)
+with col1:
+    if st.button("💬 General Chat", use_container_width=True):
+        st.session_state.mode = "general"
+with col2:
+    if st.button("📄 PDF Chat", use_container_width=True):
+        st.session_state.mode = "pdf"
 
-# -------- General Chat --------
-with tab1:
-    st.subheader("💬 General Chat")
+st.divider()
 
-    for chat in st.session_state.general_history:
-        with st.chat_message("user"):
-            st.write(chat["question"])
-        with st.chat_message("assistant"):
-            st.write(chat["answer"])
+# -------- PDF Upload (only in PDF mode) --------
+if st.session_state.mode == "pdf":
+    st.subheader("📄 PDF Chat")
 
-    user_input = st.chat_input("Ask anything...")
-    if user_input:
-        with st.spinner("Thinking..."):
-            answer = general_chat(user_input, st.session_state.general_history)
-            st.session_state.general_history.append(
-                {"question": user_input, "answer": answer}
-            )
-        st.rerun()
-
-# -------- PDF Chat --------
-with tab2:
-    st.subheader("📄 Chat with your PDF")
-
-    # Upload UI ONLY here
     uploaded_file = st.file_uploader("Upload a PDF", type=["pdf"])
 
     if uploaded_file is not None:
@@ -57,11 +49,19 @@ with tab2:
                 st.session_state.db, _ = create_vector_store(st.session_state.documents)
                 st.session_state.uploaded_filename = uploaded_file.name
                 st.session_state.doc_history = []
-
             st.success("✅ PDF loaded successfully!")
 
+# -------- Chat History UI --------
+if st.session_state.mode == "general":
+    st.subheader("💬 General Chat")
+    for chat in st.session_state.general_history:
+        with st.chat_message("user"):
+            st.write(chat["question"])
+        with st.chat_message("assistant"):
+            st.write(chat["answer"])
+else:
     if st.session_state.db is None:
-        st.info("Upload a PDF to start asking questions.")
+        st.info("Upload a PDF to start chatting.")
     else:
         for chat in st.session_state.doc_history:
             with st.chat_message("user"):
@@ -69,11 +69,28 @@ with tab2:
             with st.chat_message("assistant"):
                 st.write(chat["answer"])
 
-        doc_input = st.chat_input("Ask about the document...")
-        if doc_input:
+# -------- Chat Input (ROOT LEVEL ONLY) --------
+prompt = st.chat_input(
+    "Ask anything..."
+    if st.session_state.mode == "general"
+    else "Ask about the document..."
+)
+
+if prompt:
+    if st.session_state.mode == "general":
+        with st.spinner("Thinking..."):
+            answer = general_chat(prompt, st.session_state.general_history)
+            st.session_state.general_history.append(
+                {"question": prompt, "answer": answer}
+            )
+        st.rerun()
+    else:
+        if st.session_state.db is None:
+            st.warning("Please upload a PDF first.")
+        else:
             with st.spinner("Searching document..."):
-                answer, _ = answer_question(st.session_state.db, doc_input)
+                answer, _ = answer_question(st.session_state.db, prompt)
                 st.session_state.doc_history.append(
-                    {"question": doc_input, "answer": answer}
+                    {"question": prompt, "answer": answer}
                 )
             st.rerun()
