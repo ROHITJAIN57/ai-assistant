@@ -12,23 +12,35 @@ if "mode" not in st.session_state:
 
 if "db" not in st.session_state:
     st.session_state.db = None
+
 if "documents" not in st.session_state:
     st.session_state.documents = None
+
 if "uploaded_filename" not in st.session_state:
     st.session_state.uploaded_filename = None
+
 if "general_history" not in st.session_state:
     st.session_state.general_history = []
+
 if "doc_history" not in st.session_state:
     st.session_state.doc_history = []
 
-# -------- Mode Selector (Tabs-like header, no radios) --------
+if "last_prompt" not in st.session_state:
+    st.session_state.last_prompt = None
+
+
+# -------- Mode Selector (Tabs-like buttons) --------
 col1, col2 = st.columns(2)
+
 with col1:
     if st.button("💬 General Chat", use_container_width=True):
         st.session_state.mode = "general"
+        st.session_state.last_prompt = None
+
 with col2:
     if st.button("📄 PDF Chat", use_container_width=True):
         st.session_state.mode = "pdf"
+        st.session_state.last_prompt = None
 
 st.divider()
 
@@ -76,14 +88,17 @@ prompt = st.chat_input(
     else "Ask about the document..."
 )
 
-if prompt:
+if prompt and prompt != st.session_state.last_prompt:
+    st.session_state.last_prompt = prompt  # prevent Cloud duplicate loop
+
     if st.session_state.mode == "general":
         with st.spinner("Thinking..."):
             answer = general_chat(prompt, st.session_state.general_history)
             st.session_state.general_history.append(
                 {"question": prompt, "answer": answer}
             )
-            st.rerun()
+        st.rerun()
+
     else:
         if st.session_state.db is None:
             st.warning("Please upload a PDF first.")
