@@ -8,7 +8,7 @@ langchain-community==0.0.25
 langchain-huggingface==0.0.1
 
 # HuggingFace & NLP
-transformers==4.37.2
+transformers==4.39.0
 sentence-transformers==2.3.1
 torch==2.10.0
 
