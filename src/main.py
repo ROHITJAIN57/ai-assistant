@@ -48,6 +48,23 @@ def get_chat_model():
     return llm
 
 
+def general_chat(question: str, history: list):
+    """
+    LLM-only chat (no vector DB)
+    """
+    messages = [SystemMessage(content="You are a helpful AI assistant.")]
+
+    for h in history:
+        messages.append(HumanMessage(content=h["question"]))
+        messages.append(SystemMessage(content=h["answer"]))
+
+    messages.append(HumanMessage(content=question))
+    llm = get_chat_model()
+
+    response = llm.invoke(messages)
+    return response.content
+
+
 def answer_question(db, question):
     """Answer a question using the vector store and LLM."""
     retriever = db.as_retriever(search_kwargs={"k": 3})
