@@ -117,8 +117,6 @@ else:
                 with st.expander("📖 View Source Context"):
                     st.write(context)
 
-                st.rerun()
-
             except Exception as e:
                 st.error(f"Error generating answer: {str(e)}")
     elif submit_button and not user_question.strip():
