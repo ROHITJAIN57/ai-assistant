@@ -83,6 +83,7 @@ if prompt:
             st.session_state.general_history.append(
                 {"question": prompt, "answer": answer}
             )
+            st.rerun()
     else:
         if st.session_state.db is None:
             st.warning("Please upload a PDF first.")
@@ -92,3 +93,4 @@ if prompt:
                 st.session_state.doc_history.append(
                     {"question": prompt, "answer": answer}
                 )
+                st.rerun()
