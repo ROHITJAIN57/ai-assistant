@@ -1,7 +1,7 @@
 # Web Framework
 streamlit==1.28.0
 
-# LangChain Core & Community
+# LangChain Core & Community (compatible set)
 langchain==0.1.20
 langchain-core==0.1.52
 langchain-community==0.0.38
@@ -10,13 +10,14 @@ langchain-huggingface==0.0.1
 # HuggingFace & NLP
 transformers==4.41.0
 sentence-transformers==2.7.0
-torch==2.10.0
+torch==2.1.0
 
 # Vector Database
 faiss-cpu==1.13.2
 
-# PDF Loader
+# Document Loaders
 pypdf==4.2.0
+docx2txt==0.8
 
 # Utilities
 python-dotenv==1.0.0
